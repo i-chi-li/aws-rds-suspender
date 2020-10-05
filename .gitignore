@@ -1,3 +1,8 @@
+.idea/
+*.iml
+*.ipr
+*.iws
+
 *.js
 !jest.config.js
 *.d.ts
@@ -9,3 +14,4 @@ cdk.out
 
 # Parcel default cache directory
 .parcel-cache
+!/.gitignore
