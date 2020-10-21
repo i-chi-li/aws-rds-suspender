@@ -1,6 +1,6 @@
 FROM docker
 
-ENV PATH=~/go/bin:$PATH \
+ENV PATH=/root/go/bin:$PATH \
     TZ=Asia/Tokyo
 
 RUN apk add --update --no-cache \
