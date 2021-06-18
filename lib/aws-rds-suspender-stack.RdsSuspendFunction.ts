@@ -10,6 +10,7 @@ import * as lambdaEvents from "aws-lambda";
 //     "Event ID": "http://docs.amazonwebservices.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0151",
 //     "Event Message": "DB cluster started"
 // }
+
 /**
  * RDS イベントメッセージ
  */
@@ -32,16 +33,14 @@ const rdsClient = new aws.RDS();
  * ハンドラ
  *
  * @param event SNS イベント
- * @param context Lambda 関数コンテキスト
  */
 export async function handler(
-    event: lambdaEvents.SNSEvent,
-    context: lambdaEvents.Context
+    event: lambdaEvents.SNSEvent
 ): Promise<void> {
     for (const record of event.Records) {
         console.debug(`SNS Event Record: ${JSON.stringify(record, undefined, 2)}`);
 
-        const message: RdsEventMessage = JSON.parse(record.Sns.Message);
+        const message: RdsEventMessage = JSON.parse(record.Sns.Message) as RdsEventMessage;
         console.debug(`SNS Message: ${JSON.stringify(message, undefined, 2)}`);
 
         if (message["Event ID"].endsWith("RDS-EVENT-0151")) {

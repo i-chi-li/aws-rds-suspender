@@ -1,0 +1,6 @@
+.cdk.staging/
+.idea/
+.parcel-cache/
+cdk.out/
+node_modules/
+*.d.ts

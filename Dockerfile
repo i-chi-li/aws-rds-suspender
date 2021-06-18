@@ -1,20 +1,53 @@
-FROM docker
+#
+# CDK Execution Environment Dockerfile
+#
+# The "--privileged" option is required for docker run.
+#
+
+FROM amazonlinux:2
+
+CMD ["/bin/bash"]
+VOLUME ["/var/lib/docker"]
 
 ENV PATH=/root/go/bin:$PATH \
-    TZ=Asia/Tokyo
+    TZ=Asia/Tokyo \
+    LANG=en_US.utf8
 
-RUN apk add --update --no-cache \
-    nodejs~=12 \
-    npm \
-    openjdk11 \
-    go \
+SHELL ["/bin/bash", "-c"]
+
+RUN \
+  set -eux; \
+  yum -q -y update; \
+  yum -q -y install \
+    java-11-amazon-corretto-headless \
     git \
-    python3 \
-    python3-dev \
-    py3-pip \
+    tar \
+    unzip \
     groff \
     jq \
-    curl \
-    tzdata \
- && go get -u github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login \
- && pip install --upgrade awscli aws-sam-cli
+    vim \
+    # for docker
+    btrfs-progs \
+    e2fsprogs \
+    openssl \
+    ; \
+  # Docker
+  amazon-linux-extras install docker; \
+  # AWS CLI
+  curl --silent "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; \
+  unzip -q awscliv2.zip; \
+  ./aws/install; \
+  rm -rf aws awscliv2.zip; \
+  # Node Version Manager
+  touch ~/.bashrc; \
+  set +x; \
+  curl --silent -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh" | bash; \
+  . ~/.nvm/nvm.sh; \
+  # Node v14
+  nvm install 14; \
+  npm install -g node-inspect; \
+  nvm cache clear; \
+  set -x; \
+  # Clean Yum Cache
+  rm -rf /var/cache/yum; \
+  yum clean all;

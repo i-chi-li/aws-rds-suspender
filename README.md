@@ -59,10 +59,9 @@ docker build -t self/docker-custom .
 その際に、指定するディレクトリは、Docker ホスト仮想環境のディレクトリであることに注意すること。
 ```
 docker run --name infra -itd ^
---mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock ^
 --mount type=bind,source=/C/Users/foo1/.aws,target=/root/.aws ^
 --mount type=bind,source=/D/programs/aws-rds-suspender,target=/D/programs/aws-rds-suspender ^
-self/docker-custom
+self/aws-rds-suspender
 ```
 
 
@@ -92,6 +91,7 @@ Docker ホストに接続する。
 
 
 ## プロジェクトのデプロイ方法
+AWS 接続用のプロファイルは設定済みとする。
 プロジェクトルートで、以下のコマンドを実行する。
 `-c db-names=` に指定する値は、RDS データベースクラスタ名に変更する
 RDS データベースクラスタ名は、カンマ区切りで複数指定可能。
@@ -99,5 +99,5 @@ RDS データベースクラスタ名は、カンマ区切りで複数指定可�
 ```
 npm install
 npm run build
-npx cdk -c db-names=db1,db2 deploy AwsRdsSuspenderStack
+AWS_PROFILE=<profileName> npx cdk -c db-names=db1,db2 deploy AwsRdsSuspenderStack
 ```

@@ -31,7 +31,8 @@ export class AwsRdsSuspenderStack extends cdk.Stack {
 
         // 停止対象 RDS クラスタ名リスト
         // 未指定の場合は、すべての RDS クラスタとなる
-        const sourceIds: string[] | undefined = this.node.tryGetContext("db-names")?.split(",");
+        const sourceIds: string[] | undefined =
+            (this.node.tryGetContext("db-names") as string)?.split(",");
 
         // RDS イベントサブスクリプション
         new rds.CfnEventSubscription(this, "RdsEventSubscription", {
